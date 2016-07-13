@@ -66,10 +66,7 @@ class MoviesViewController: UIViewController {
     private func configureTableView() {
         tableView.dataSource = self
         tableView.delegate = self
-        
         tableView.remembersLastFocusedIndexPath = true
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 66
     }
     
 }
@@ -97,6 +94,7 @@ extension MoviesViewController: UITableViewDataSource {
         let movie = movies[indexPath.row]
         
         cell.textLabel?.text = movie.title
+        cell.detailTextLabel?.text = movie.releaseDate
         cell.layer.cornerRadius = 6
         cell.layer.masksToBounds = true
     }
@@ -115,6 +113,11 @@ extension MoviesViewController: UITableViewDelegate {
         guard let highlightedRow = context.nextFocusedIndexPath?.row  else { return }
         
         let movie = movies[highlightedRow]
+        guard movie.posterPath != nil else {
+            imageView.image = UIImage(named: "movie-placeholder")
+            return
+        }
+        
         if let image = posters[movie.id] {
             imageView.image = image
         } else {

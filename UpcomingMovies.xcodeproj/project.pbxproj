@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		757EE30D1D360CE30083C177 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757EE30C1D360CE30083C177 /* DetailViewController.swift */; };
+		75B096341D367ABC0016EB7C /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B096331D367ABC0016EB7C /* Genre.swift */; };
 		75B1F6841D35D024004D11C0 /* TMDbConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6831D35D024004D11C0 /* TMDbConfig.swift */; };
 		75B1F6861D35D141004D11C0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6851D35D141004D11C0 /* Constants.swift */; };
 		75B1F68B1D35D68A004D11C0 /* GCDUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F68A1D35D68A004D11C0 /* GCDUtils.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		757EE30C1D360CE30083C177 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		75B096331D367ABC0016EB7C /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		75B1F6831D35D024004D11C0 /* TMDbConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDbConfig.swift; sourceTree = "<group>"; };
 		75B1F6851D35D141004D11C0 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		75B1F68A1D35D68A004D11C0 /* GCDUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDUtils.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				75B1F69A1D35F91A004D11C0 /* Movie.swift */,
+				75B096331D367ABC0016EB7C /* Genre.swift */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				75B1F69F1D360A01004D11C0 /* App.swift in Sources */,
 				75B1F69B1D35F91A004D11C0 /* Movie.swift in Sources */,
 				75B1F68F1D35D715004D11C0 /* Resource.swift in Sources */,
+				75B096341D367ABC0016EB7C /* Genre.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

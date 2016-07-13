@@ -91,10 +91,10 @@ extension Movie {
 
 extension Movie {
     
-    func downloadPosterImage(completion: UIImage? -> ()) {
+    func downloadPosterImage(size: String = "w500", completion: UIImage? -> ()) {
         guard let posterPath = posterPath else { return }
         let baseURL = NSURL(string: TMDb.sharedInstance.config.secureBaseImageURLString)!
-        let URL = baseURL.URLByAppendingPathComponent("w500").URLByAppendingPathComponent(posterPath)
+        let URL = baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(posterPath)
         
         NSURLSession.sharedSession().dataTaskWithURL(URL) { (data, _, _) in
             let image = data.flatMap(UIImage.init)

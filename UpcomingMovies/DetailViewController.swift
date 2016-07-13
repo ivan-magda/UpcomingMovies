@@ -26,14 +26,60 @@ import UIKit
 
 class DetailViewController: UIViewController {
     
+    // MARK: Outlets
+    
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var overview: UILabel!
+    @IBOutlet weak var rating: UILabel!
+    @IBOutlet weak var releaseDate: UILabel!
+    @IBOutlet weak var genresLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     // MARK: Properties
     
     var movie: Movie?
+    private var genres = [Genre]() {
+        didSet {
+            updateGenresLabel()
+        }
+    }
 
     // MARK: View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configure()
+    }
+    
+    // MARK: Private
+    
+    private func configure() {
+        guard let movie = movie else { return }
+        
+        name.text = movie.title
+        overview.text = movie.overview
+        rating.text = rating.text! + " \(movie.vote)"
+        releaseDate.text = releaseDate.text! + " \(movie.releaseDate)"
+        
+        activityIndicator.startAnimating()
+        movie.downloadPosterImage("original") { [weak self] image in
+            self?.activityIndicator.stopAnimating()
+            self?.imageView.image = image
+        }
+        
+        Webservice().load(Genre.all()) { [weak self] result in
+            guard let genres = result.value else { return print(result.error!) }
+            self?.genres = genres
+        }
+    }
+    
+    private func updateGenresLabel() {
+        let ids = movie!.genreIds
+        let movieGenres = genres.filter { ids.contains($0.id) }.map { $0.name }
+        let genresString = movieGenres.joinWithSeparator(", ")
+        
+        genresLabel.text = genresLabel.text! + " \(genresString)"
     }
 
 }
