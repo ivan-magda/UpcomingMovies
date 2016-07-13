@@ -20,30 +20,23 @@
  * THE SOFTWARE.
  */
 
-import UIKit
+import Foundation
 
-// MARK: AppDelegate: UIResponder, UIApplicationDelegate
+typealias JSONDictionary = [String: AnyObject]
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+enum WebserviceError: ErrorType {
+    case other
+}
+
+final class Webservice {
+    init() { }
     
-    // MARK: Properties
-
-    var window: UIWindow?
-    private let tmdb = TMDb.sharedInstance
-    
-    // MARK: UIApplicationDelegate
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        let service = Webservice()
-        service.load(Movie.upcoming()) { result in
-            guard let movies = result.value else { return print(result.error!) }
-            print(movies.count)
-            movies.forEach { print($0.title) }
-        }
-        
-        return true
+    /// Loads a resource. The completion handler is always called on the main queue.
+    func load<A>(resource: Resource<A>, completion: Result<A> -> ()) {
+        NSURLSession.sharedSession().dataTaskWithURL(resource.url) { data, response, _ in
+            let parsed = data.flatMap(resource.parse)
+            let result = Result(parsed, or: WebserviceError.other)
+            mainQueue { completion(result) }
+            }.resume()
     }
-
 }

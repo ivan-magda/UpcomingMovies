@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		75B1F6841D35D024004D11C0 /* TMDbConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6831D35D024004D11C0 /* TMDbConfig.swift */; };
+		75B1F6861D35D141004D11C0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6851D35D141004D11C0 /* Constants.swift */; };
+		75B1F68B1D35D68A004D11C0 /* GCDUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F68A1D35D68A004D11C0 /* GCDUtils.swift */; };
+		75B1F68F1D35D715004D11C0 /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F68E1D35D715004D11C0 /* Resource.swift */; };
+		75B1F6911D35D75A004D11C0 /* Webservice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6901D35D75A004D11C0 /* Webservice.swift */; };
+		75B1F6931D35D794004D11C0 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6921D35D794004D11C0 /* Result.swift */; };
+		75B1F6971D35EE73004D11C0 /* TMDb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6961D35EE73004D11C0 /* TMDb.swift */; };
+		75B1F6991D35EF9E004D11C0 /* TMDb+ResourceExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F6981D35EF9E004D11C0 /* TMDb+ResourceExtensions.swift */; };
+		75B1F69B1D35F91A004D11C0 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B1F69A1D35F91A004D11C0 /* Movie.swift */; };
 		75D483B81D35CE42004E1986 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D483B71D35CE42004E1986 /* AppDelegate.swift */; };
 		75D483BA1D35CE42004E1986 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75D483B91D35CE42004E1986 /* ViewController.swift */; };
 		75D483BD1D35CE42004E1986 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75D483BB1D35CE42004E1986 /* Main.storyboard */; };
@@ -14,6 +23,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		75B1F6831D35D024004D11C0 /* TMDbConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDbConfig.swift; sourceTree = "<group>"; };
+		75B1F6851D35D141004D11C0 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		75B1F68A1D35D68A004D11C0 /* GCDUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDUtils.swift; sourceTree = "<group>"; };
+		75B1F68E1D35D715004D11C0 /* Resource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
+		75B1F6901D35D75A004D11C0 /* Webservice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Webservice.swift; sourceTree = "<group>"; };
+		75B1F6921D35D794004D11C0 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		75B1F6961D35EE73004D11C0 /* TMDb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDb.swift; sourceTree = "<group>"; };
+		75B1F6981D35EF9E004D11C0 /* TMDb+ResourceExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TMDb+ResourceExtensions.swift"; sourceTree = "<group>"; };
+		75B1F69A1D35F91A004D11C0 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		75D483B41D35CE42004E1986 /* UpcomingMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpcomingMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75D483B71D35CE42004E1986 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75D483B91D35CE42004E1986 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -33,6 +51,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		75B1F6871D35D288004D11C0 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				75B1F6941D35D7E0004D11C0 /* Networking */,
+				75B1F6951D35D862004D11C0 /* TMDb */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
+		75B1F68C1D35D6C3004D11C0 /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				75D483C01D35CE42004E1986 /* Info.plist */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		75B1F68D1D35D6D6004D11C0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				75B1F68A1D35D68A004D11C0 /* GCDUtils.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		75B1F6941D35D7E0004D11C0 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				75B1F68E1D35D715004D11C0 /* Resource.swift */,
+				75B1F6901D35D75A004D11C0 /* Webservice.swift */,
+				75B1F6921D35D794004D11C0 /* Result.swift */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		75B1F6951D35D862004D11C0 /* TMDb */ = {
+			isa = PBXGroup;
+			children = (
+				75B1F6961D35EE73004D11C0 /* TMDb.swift */,
+				75B1F6831D35D024004D11C0 /* TMDbConfig.swift */,
+				75B1F6981D35EF9E004D11C0 /* TMDb+ResourceExtensions.swift */,
+			);
+			name = TMDb;
+			sourceTree = "<group>";
+		};
+		75B1F69C1D35F91F004D11C0 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				75B1F69A1D35F91A004D11C0 /* Movie.swift */,
+			);
+			name = Data;
+			sourceTree = "<group>";
+		};
 		75D483AB1D35CE41004E1986 = {
 			isa = PBXGroup;
 			children = (
@@ -53,12 +124,32 @@
 			isa = PBXGroup;
 			children = (
 				75D483B71D35CE42004E1986 /* AppDelegate.swift */,
-				75D483B91D35CE42004E1986 /* ViewController.swift */,
-				75D483BB1D35CE42004E1986 /* Main.storyboard */,
-				75D483BE1D35CE42004E1986 /* Assets.xcassets */,
-				75D483C01D35CE42004E1986 /* Info.plist */,
+				75B1F6851D35D141004D11C0 /* Constants.swift */,
+				75B1F6871D35D288004D11C0 /* API */,
+				75B1F69C1D35F91F004D11C0 /* Data */,
+				75D483C71D35CF81004E1986 /* Controllers */,
+				75D483C61D35CF7B004E1986 /* Assets */,
+				75B1F68D1D35D6D6004D11C0 /* Utils */,
+				75B1F68C1D35D6C3004D11C0 /* SupportingFiles */,
 			);
 			path = UpcomingMovies;
+			sourceTree = "<group>";
+		};
+		75D483C61D35CF7B004E1986 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				75D483BB1D35CE42004E1986 /* Main.storyboard */,
+				75D483BE1D35CE42004E1986 /* Assets.xcassets */,
+			);
+			name = Assets;
+			sourceTree = "<group>";
+		};
+		75D483C71D35CF81004E1986 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				75D483B91D35CE42004E1986 /* ViewController.swift */,
+			);
+			name = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,8 +222,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75B1F6931D35D794004D11C0 /* Result.swift in Sources */,
 				75D483BA1D35CE42004E1986 /* ViewController.swift in Sources */,
+				75B1F6991D35EF9E004D11C0 /* TMDb+ResourceExtensions.swift in Sources */,
+				75B1F68B1D35D68A004D11C0 /* GCDUtils.swift in Sources */,
+				75B1F6911D35D75A004D11C0 /* Webservice.swift in Sources */,
+				75B1F6971D35EE73004D11C0 /* TMDb.swift in Sources */,
 				75D483B81D35CE42004E1986 /* AppDelegate.swift in Sources */,
+				75B1F6841D35D024004D11C0 /* TMDbConfig.swift in Sources */,
+				75B1F6861D35D141004D11C0 /* Constants.swift in Sources */,
+				75B1F69B1D35F91A004D11C0 /* Movie.swift in Sources */,
+				75B1F68F1D35D715004D11C0 /* Resource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +376,7 @@
 				75D483C51D35CE42004E1986 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

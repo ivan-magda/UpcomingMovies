@@ -20,30 +20,31 @@
  * THE SOFTWARE.
  */
 
-import UIKit
+import Foundation
 
-// MARK: AppDelegate: UIResponder, UIApplicationDelegate
+enum Result<A> {
+    case success(A)
+    case error(ErrorType)
+}
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+extension Result {
     
-    // MARK: Properties
-
-    var window: UIWindow?
-    private let tmdb = TMDb.sharedInstance
-    
-    // MARK: UIApplicationDelegate
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        let service = Webservice()
-        service.load(Movie.upcoming()) { result in
-            guard let movies = result.value else { return print(result.error!) }
-            print(movies.count)
-            movies.forEach { print($0.title) }
+    init(_ value: A?, or error: ErrorType) {
+        if let value = value {
+            self = .success(value)
+        } else {
+            self = .error(error)
         }
-        
-        return true
     }
-
+    
+    var value: A? {
+        guard case .success(let v) = self else { return nil }
+        return v
+    }
+    
+    var error: ErrorType? {
+        guard case .error(let e) = self else { return nil }
+        return e
+    }
+    
 }

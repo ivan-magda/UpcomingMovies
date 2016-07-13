@@ -20,30 +20,19 @@
  * THE SOFTWARE.
  */
 
-import UIKit
+import Foundation
 
-// MARK: AppDelegate: UIResponder, UIApplicationDelegate
+struct Resource<A> {
+    var url: NSURL
+    var parse: NSData -> A?
+}
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    // MARK: Properties
-
-    var window: UIWindow?
-    private let tmdb = TMDb.sharedInstance
-    
-    // MARK: UIApplicationDelegate
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        let service = Webservice()
-        service.load(Movie.upcoming()) { result in
-            guard let movies = result.value else { return print(result.error!) }
-            print(movies.count)
-            movies.forEach { print($0.title) }
+extension Resource {
+    init(url: NSURL, parseJSON: AnyObject -> A?) {
+        self.url = url
+        self.parse = { data in
+            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+            return json.flatMap(parseJSON)
         }
-        
-        return true
     }
-
 }

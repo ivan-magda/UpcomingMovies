@@ -22,28 +22,37 @@
 
 import UIKit
 
-// MARK: AppDelegate: UIResponder, UIApplicationDelegate
+// MARK: Constants
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+struct Constants {
     
-    // MARK: Properties
-
-    var window: UIWindow?
-    private let tmdb = TMDb.sharedInstance
-    
-    // MARK: UIApplicationDelegate
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        let service = Webservice()
-        service.load(Movie.upcoming()) { result in
-            guard let movies = result.value else { return print(result.error!) }
-            print(movies.count)
-            movies.forEach { print($0.title) }
-        }
-        
-        return true
+    // MARK: TMDB
+    struct TMDB {
+        static let ApiScheme = "https"
+        static let ApiHost = "api.themoviedb.org"
+        static let ApiPath = "/3"
     }
-
+    
+    // MARK: TMDB Parameter Keys
+    struct TMDBParameterKeys {
+        static let ApiKey = "api_key"
+    }
+    
+    // MARK: TMDB Parameter Values
+    struct TMDBParameterValues {
+        static let ApiKey = "f63eb3a300d26ef9e8a067996c92c4a5"
+    }
+    
+    // MARK: TMDB Response Keys
+    struct TMDBResponseKeys {
+        static let Title = "title"
+        static let ID = "id"
+        static let PosterPath = "poster_path"
+        static let StatusCode = "status_code"
+        static let StatusMessage = "status_message"
+        static let Success = "success"
+        static let UserID = "id"
+        static let Results = "results"
+    }
+    
 }
