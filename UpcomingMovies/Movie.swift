@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-import Foundation
+import UIKit
 
 // MARK: Types
 
@@ -42,8 +42,8 @@ struct Movie {
     let overview: String
     let releaseDate: String
     let genreIds: [Int]
-    let posterPath: String?
     let vote: Double
+    let posterPath: String?
 }
 
 // MARK: - Movie (JSON Parsing) -
@@ -71,6 +71,8 @@ extension Movie {
     
 }
 
+// MARK: - Movie (Resource) -
+
 extension Movie {
     
     static func upcoming() -> Resource<[Movie]> {
@@ -83,4 +85,23 @@ extension Movie {
         
         return resource
     }
+}
+
+// MARK: - Movie (Poster Image) -
+
+extension Movie {
+    
+    func downloadPosterImage(completion: UIImage? -> ()) {
+        guard let posterPath = posterPath else { return }
+        let baseURL = NSURL(string: TMDb.sharedInstance.config.secureBaseImageURLString)!
+        let URL = baseURL.URLByAppendingPathComponent("w500").URLByAppendingPathComponent(posterPath)
+        
+        NSURLSession.sharedSession().dataTaskWithURL(URL) { (data, _, _) in
+            let image = data.flatMap(UIImage.init)
+            mainQueue {
+                completion(image)
+            }
+        }.resume()
+    }
+    
 }

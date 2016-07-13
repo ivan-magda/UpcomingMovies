@@ -22,26 +22,18 @@
 
 import UIKit
 
-// MARK: AppDelegate: UIResponder, UIApplicationDelegate
+// MARK: DetailViewController: UIViewController
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class DetailViewController: UIViewController {
     
     // MARK: Properties
-
-    var window: UIWindow?
-    var app: App?
     
-    private let tmdb = TMDb.sharedInstance
-    
-    // MARK: UIApplicationDelegate
+    var movie: Movie?
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        if let window = window {
-            app = App(window: window)
-        }
-        
-        return true
+    // MARK: View Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
 
 }

@@ -46,7 +46,7 @@ class TMDb {
     
 }
 
-// MARK: - Create destionation URL -
+// MARK: - Create URLs -
 
 extension TMDb {
     

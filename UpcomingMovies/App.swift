@@ -22,11 +22,28 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+// MARK: App
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+class App {
+    
+    // MARK: Properties
+    
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let moviesViewController: MoviesViewController!
+    
+    // MARK: Init
+    
+    init(window: UIWindow) {
+        moviesViewController = window.rootViewController as! MoviesViewController
+        moviesViewController.didSelect = showMovie
     }
-
+    
+    // MARK: Navigation Roots
+    
+    func showMovie(movie: Movie) {
+        let detailVC = storyboard.instantiateViewControllerWithIdentifier("Detail") as! DetailViewController
+        detailVC.movie = movie
+        moviesViewController.presentViewController(detailVC, animated: true, completion: nil)
+    }
+    
 }
-
