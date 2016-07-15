@@ -21,6 +21,7 @@
  */
 
 import UIKit
+import AlamofireImage
 
 let kCellReuseIdentifier = "Cell"
 
@@ -35,12 +36,8 @@ class MoviesViewController: UIViewController {
     
     // MARK: Properties
     
-    var movies = [Movie]() {
-        didSet {
-            tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
-        }
-    }
-    private var posters = [Int: UIImage]()
+    private let tableViewDataSource = MoviesTableViewDataSource()
+    //private var posters = [Int: UIImage]()
     
     var didSelect: (Movie) -> () = { _ in }
     
@@ -59,44 +56,15 @@ class MoviesViewController: UIViewController {
         let service = Webservice()
         service.load(Movie.upcoming()) { [weak self] result in
             guard let movies = result.value else { return print(result.error!) }
-            self?.movies = movies
+            self?.tableViewDataSource.movies = movies
+            self?.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
         }
     }
     
     private func configureTableView() {
-        tableView.dataSource = self
+        tableView.dataSource = tableViewDataSource
         tableView.delegate = self
         tableView.remembersLastFocusedIndexPath = true
-    }
-    
-}
-
-// MARK: - MoviesViewController: UITableViewDataSource -
-
-extension MoviesViewController: UITableViewDataSource {
-    
-    // MARK: UITableViewDataSource
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(kCellReuseIdentifier)!
-        configureCell(cell, atIndexPath: indexPath)
-        
-        return cell
-    }
-    
-    // MARK: Helpers
-    
-    private func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
-        let movie = movies[indexPath.row]
-        
-        cell.textLabel?.text = movie.title
-        cell.detailTextLabel?.text = movie.releaseDate
-        cell.layer.cornerRadius = 6
-        cell.layer.masksToBounds = true
     }
     
 }
@@ -105,29 +73,29 @@ extension MoviesViewController: UITableViewDataSource {
 
 extension MoviesViewController: UITableViewDelegate {
     
+    // MARK: UITableViewDelegate
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        didSelect(movies[indexPath.row])
+        let movie = tableViewDataSource.movieForIndexPath(indexPath)!
+        didSelect(movie)
     }
     
     func tableView(tableView: UITableView, didUpdateFocusInContext context: UITableViewFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
-        guard let highlightedRow = context.nextFocusedIndexPath?.row  else { return }
+        didUpdateFocusInContext(context)
+    }
+    
+    // MARK: Helpers
+    
+    private func didUpdateFocusInContext(context: UITableViewFocusUpdateContext) {
+        guard let highlightedIndexPath = context.nextFocusedIndexPath else { return }
         
-        let movie = movies[highlightedRow]
+        let movie = tableViewDataSource.movieForIndexPath(highlightedIndexPath)!
         guard movie.posterPath != nil else {
             imageView.image = UIImage(named: "movie-placeholder")
             return
         }
         
-        if let image = posters[movie.id] {
-            imageView.image = image
-        } else {
-            imageView.image = nil
-            movie.downloadPosterImage { [weak self] image in
-                guard let image = image else { return }
-                self?.imageView.image = image
-                self?.posters[movie.id] = image
-            }
-        }
+        imageView.af_setImageWithURL(movie.posterImageURL()!)
         
         if let row = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(row, animated: false)

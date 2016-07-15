@@ -38,7 +38,7 @@ class DetailViewController: UIViewController {
     
     // MARK: Properties
     
-    var movie: Movie?
+    var movie: Movie!
     private var genres = [Genre]() {
         didSet {
             updateGenresLabel()
@@ -55,17 +55,15 @@ class DetailViewController: UIViewController {
     // MARK: Private
     
     private func configure() {
-        guard let movie = movie else { return }
-        
         name.text = movie.title
-        overview.text = movie.overview
-        rating.text = rating.text! + " \(movie.vote)"
-        releaseDate.text = releaseDate.text! + " \(movie.releaseDate)"
+        overview.text = "Overview: \(movie.overview)"
+        rating.text = "Rating: \(movie.vote)"
+        releaseDate.text = "Release date: \(movie.releaseDate)"
         
-        activityIndicator.startAnimating()
-        movie.downloadPosterImage("original") { [weak self] image in
-            self?.activityIndicator.stopAnimating()
-            self?.imageView.image = image
+        if let _ = movie.posterPath {
+            imageView.af_setImageWithURL(movie.posterImageURL()!)
+        } else {
+            imageView.image = UIImage(named: "movie-placeholder")
         }
         
         Webservice().load(Genre.all()) { [weak self] result in
