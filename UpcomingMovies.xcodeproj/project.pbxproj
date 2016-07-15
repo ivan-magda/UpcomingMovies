@@ -109,13 +109,13 @@
 			name = TMDb;
 			sourceTree = "<group>";
 		};
-		75B1F69C1D35F91F004D11C0 /* Data */ = {
+		75B1F69C1D35F91F004D11C0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				75B1F69A1D35F91A004D11C0 /* Movie.swift */,
 				75B096331D367ABC0016EB7C /* Genre.swift */,
 			);
-			name = Data;
+			name = Model;
 			sourceTree = "<group>";
 		};
 		75B1F69D1D3609F6004D11C0 /* App */ = {
@@ -151,7 +151,7 @@
 				75B1F69D1D3609F6004D11C0 /* App */,
 				75B1F6851D35D141004D11C0 /* Constants.swift */,
 				75B1F6871D35D288004D11C0 /* API */,
-				75B1F69C1D35F91F004D11C0 /* Data */,
+				75B1F69C1D35F91F004D11C0 /* Model */,
 				75D483C71D35CF81004E1986 /* Controllers */,
 				75D483C61D35CF7B004E1986 /* Assets */,
 				75B1F68D1D35D6D6004D11C0 /* Utils */,

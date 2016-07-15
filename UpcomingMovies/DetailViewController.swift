@@ -34,12 +34,13 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var releaseDate: UILabel!
     @IBOutlet weak var genresLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Properties
     
     var movie: Movie!
-    private var genres = [Genre]() {
+    var tmdb: TMDb!
+    
+    private var genres: [Genre]? {
         didSet {
             updateGenresLabel()
         }
@@ -49,35 +50,43 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        setup()
     }
     
     // MARK: Private
     
-    private func configure() {
+    private func setup() {
+        configureUI()
+        loadGenres()
+    }
+    
+    private func configureUI() {
         name.text = movie.title
         overview.text = "Overview: \(movie.overview)"
         rating.text = "Rating: \(movie.vote)"
         releaseDate.text = "Release date: \(movie.releaseDate)"
         
         if let _ = movie.posterPath {
-            imageView.af_setImageWithURL(movie.posterImageURL()!)
+            imageView.af_setImageWithURL(tmdb.posterImageURLForMovie(movie)!)
         } else {
             imageView.image = UIImage(named: "movie-placeholder")
         }
-        
-        Webservice().load(Genre.all()) { [weak self] result in
-            guard let genres = result.value else { return print(result.error!) }
+    }
+    
+    private func loadGenres() {
+        tmdb.allGenres { [weak self] (genres, error) in
+            guard error == nil else { return print(error!) }
             self?.genres = genres
         }
     }
     
     private func updateGenresLabel() {
+        guard let genres = genres else { return }
         let ids = movie!.genreIds
         let movieGenres = genres.filter { ids.contains($0.id) }.map { $0.name }
         let genresString = movieGenres.joinWithSeparator(", ")
         
-        genresLabel.text = genresLabel.text! + " \(genresString)"
+        genresLabel.text = "Genres: \(genresString)"
     }
 
 }

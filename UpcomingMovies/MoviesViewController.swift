@@ -37,7 +37,7 @@ class MoviesViewController: UIViewController {
     // MARK: Properties
     
     private let tableViewDataSource = MoviesTableViewDataSource()
-    //private var posters = [Int: UIImage]()
+    var tmdb: TMDb!
     
     var didSelect: (Movie) -> () = { _ in }
     
@@ -52,19 +52,21 @@ class MoviesViewController: UIViewController {
     
     private func setup() {
         configureTableView()
-        
-        let service = Webservice()
-        service.load(Movie.upcoming()) { [weak self] result in
-            guard let movies = result.value else { return print(result.error!) }
-            self?.tableViewDataSource.movies = movies
-            self?.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
-        }
+        loadData()
     }
     
     private func configureTableView() {
         tableView.dataSource = tableViewDataSource
         tableView.delegate = self
         tableView.remembersLastFocusedIndexPath = true
+    }
+    
+    private func loadData() {
+        tmdb.upcomingMovies { [weak self] (movies, error) in
+            guard error == nil else { return print(error) }
+            self?.tableViewDataSource.movies = movies
+            self?.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+        }
     }
     
 }
@@ -95,7 +97,7 @@ extension MoviesViewController: UITableViewDelegate {
             return
         }
         
-        imageView.af_setImageWithURL(movie.posterImageURL()!)
+        imageView.af_setImageWithURL(tmdb.posterImageURLForMovie(movie)!)
         
         if let row = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(row, animated: false)

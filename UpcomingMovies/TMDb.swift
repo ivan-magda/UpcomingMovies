@@ -24,24 +24,34 @@ import Foundation
 
 typealias MethodParameters = [String: AnyObject]
 
+typealias MoviesCompletionHandler = ([Movie]?, ErrorType?) -> Void
+typealias GenresCompletionHandler = ([Genre]?, ErrorType?) -> Void
+
 // MARK: TMDb
 
 class TMDb {
     
     // MARK: Properties
     
-    static let sharedInstance = TMDb()
-    var config: TMDbConfig!
+    var webservice: Webservice
+    var config: TMDbConfig
     
     // MARK: Init
     
-    private init() {
-        config = TMDbConfig.unarchivedInstance() ?? TMDbConfig()
+    init(webservice: Webservice, config: TMDbConfig) {
+        self.webservice = webservice
+        self.config = config
+        
         config.requestForNewConfigIfDaysSinceUpdateExceeds(7) { [unowned self] result in
             guard let newConfig = result.value else { return print(result.error!) }
             self.config = newConfig
             self.config.save()
         }
+    }
+    
+    convenience init(webservice: Webservice) {
+        let config = TMDbConfig.unarchivedInstance() ?? TMDbConfig()
+        self.init(webservice: webservice, config: config)
     }
     
 }
@@ -69,6 +79,42 @@ extension TMDb {
         }
         
         return components.URL!
+    }
+    
+}
+
+// MARK: - Calling Endpoints -
+
+extension TMDb {
+    
+    func upcomingMovies(completion: MoviesCompletionHandler) {
+        webservice.load(Movie.upcoming()) { result in
+            guard let movies = result.value else { return completion(nil, result.error) }
+            completion(movies, nil)
+        }
+    }
+    
+    func allGenres(completion: GenresCompletionHandler) {
+        webservice.load(Genre.all()) { result in
+            guard let genres = result.value else { return completion(nil, result.error) }
+            completion(genres, nil)
+        }
+    }
+    
+}
+
+// MARK: - TMDb (Movie Poster Image) -
+
+extension TMDb {
+    
+    func posterImageURLForMovie(movie: Movie, size: String) -> NSURL? {
+        guard let posterPath = movie.posterPath else { return nil }
+        let baseURL = NSURL(string: config.secureBaseImageURLString)!
+        return baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(posterPath)
+    }
+    
+    func posterImageURLForMovie(movie: Movie) -> NSURL? {
+        return posterImageURLForMovie(movie, size: "w500")
     }
     
 }

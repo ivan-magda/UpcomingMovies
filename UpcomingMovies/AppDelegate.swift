@@ -32,8 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var app: App?
     
-    private let tmdb = TMDb.sharedInstance
-    
     // MARK: UIApplicationDelegate
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {

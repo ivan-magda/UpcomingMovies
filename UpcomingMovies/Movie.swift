@@ -86,29 +86,3 @@ extension Movie {
         return resource
     }
 }
-
-// MARK: - Movie (Poster Image) -
-
-extension Movie {
-    
-    func posterImageURLForSize(size: String) -> NSURL? {
-        guard let posterPath = posterPath else { return nil }
-        let baseURL = NSURL(string: TMDb.sharedInstance.config.secureBaseImageURLString)!
-        return baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(posterPath)
-    }
-    
-    func posterImageURL() -> NSURL? {
-        return posterImageURLForSize("w500")
-    }
-    
-    func downloadPosterImage(size: String = "w500", completion: UIImage? -> ()) {
-        guard let URL = posterImageURLForSize(size) else { return completion(nil) }
-        NSURLSession.sharedSession().dataTaskWithURL(URL) { (data, _, _) in
-            let image = data.flatMap(UIImage.init)
-            mainQueue {
-                completion(image)
-            }
-        }.resume()
-    }
-    
-}
