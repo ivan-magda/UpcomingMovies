@@ -1,4 +1,7 @@
 # UpcomingMovies
+
+[![codebeat badge](https://codebeat.co/badges/45aace6d-3590-4b49-8e5e-ecada120c4ee)](https://codebeat.co/projects/github-com-vanyaland-upcomingmovies-master)
+
 tvOS example app. Shows upcoming movies as a list and in a detail movie screen, using [TMDb API](https://www.themoviedb.org/?language=en).
 
 ## Installation
