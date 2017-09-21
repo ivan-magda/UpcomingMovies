@@ -4,5 +4,5 @@ use_frameworks!
 inhibit_all_warnings!
 
 target 'UpcomingMovies' do
-  pod 'AlamofireImage'
+  pod 'AlamofireImage', '~> 3.3'
 end
