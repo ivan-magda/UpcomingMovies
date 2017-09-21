@@ -23,15 +23,15 @@
 import Foundation
 
 extension TMDbConfig {
-    
-    class func resource() -> Resource<TMDbConfig> {
-        let URL = TMDb.urlFromParameters([:], withPathExtension: "/configuration")
-        let resource = Resource<TMDbConfig>(url: URL) { json in
-            let dictionary = json as? JSONDictionary
-            return dictionary.flatMap(TMDbConfig.init)
-        }
-        
-        return resource
+  
+  class func resource() -> Resource<TMDbConfig> {
+    let URL = TMDb.url(from: [:], withPathExtension: "/configuration")
+    let resource = Resource<TMDbConfig>(url: URL) { json in
+      let dictionary = json as? JSONDictionary
+      return dictionary.flatMap(TMDbConfig.init)
     }
     
+    return resource
+  }
+  
 }

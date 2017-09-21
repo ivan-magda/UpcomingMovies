@@ -25,67 +25,64 @@ import UIKit
 // MARK: Types
 
 private enum Key: String {
-    case id
-    case title
-    case overview
-    case releaseDate = "release_date"
-    case genreIds = "genre_ids"
-    case posterPath = "poster_path"
-    case vote = "vote_average"
+  case id
+  case title
+  case overview
+  case releaseDate = "release_date"
+  case genreIds = "genre_ids"
+  case posterPath = "poster_path"
+  case vote = "vote_average"
 }
 
 // MARK: - Movie
 
 struct Movie {
-    let id: Int
-    let title: String
-    let overview: String
-    let releaseDate: String
-    let genreIds: [Int]
-    let vote: Double
-    let posterPath: String?
+  let id: Int
+  let title: String
+  let overview: String
+  let releaseDate: String
+  let genreIds: [Int]
+  let vote: Double
+  let posterPath: String?
 }
 
 // MARK: - Movie (JSON Parsing) -
 
 extension Movie {
-    
-    init?(json: JSONDictionary) {
-        guard let id = json[Key.id.rawValue] as? Int,
-            let title = json[Key.title.rawValue] as? String,
-            let overview = json[Key.overview.rawValue] as? String,
-            let releaseDate = json[Key.releaseDate.rawValue] as? String,
-            let genreIds = json[Key.genreIds.rawValue] as? [Int],
-            let vote = json[Key.vote.rawValue] as? Double else {
-                return nil
-        }
-        
-        self.id = id
-        self.title = title
-        self.overview = overview
-        self.releaseDate = releaseDate
-        self.genreIds = genreIds
-        self.vote = vote
-        self.posterPath = json[Key.posterPath.rawValue] as? String
+  
+  init?(json: JSONDictionary) {
+    guard let id = json[Key.id.rawValue] as? Int,
+      let title = json[Key.title.rawValue] as? String,
+      let overview = json[Key.overview.rawValue] as? String,
+      let releaseDate = json[Key.releaseDate.rawValue] as? String,
+      let genreIds = json[Key.genreIds.rawValue] as? [Int],
+      let vote = json[Key.vote.rawValue] as? Double else {
+        return nil
     }
     
+    self.id = id
+    self.title = title
+    self.overview = overview
+    self.releaseDate = releaseDate
+    self.genreIds = genreIds
+    self.vote = vote
+    self.posterPath = json[Key.posterPath.rawValue] as? String
+  }
+  
 }
 
 // MARK: - Movie (Resource) -
 
 extension Movie {
+  
+  static func upcoming() -> Resource<[Movie]> {
+    let URL = TMDb.url(from: [:], withPathExtension: "/movie/upcoming")
     
-    static func upcoming() -> Resource<[Movie]> {
-        let URL = TMDb.urlFromParameters([:], withPathExtension: "/movie/upcoming")
-        
-        let resource = Resource<[Movie]>(url: URL) { json in
-            guard let json = json as? JSONDictionary,
-                let movies = json["results"] as? [JSONDictionary] else {
-                    return []
-            }
-            return movies.flatMap(Movie.init)
-        }
-        
-        return resource
+    let resource = Resource<[Movie]>(url: URL) { json in
+      let movies = (json as? JSONDictionary)?["results"] as? [JSONDictionary]
+      return movies?.flatMap(Movie.init)
     }
+    
+    return resource
+  }
 }

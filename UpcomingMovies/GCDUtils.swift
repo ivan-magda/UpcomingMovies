@@ -23,5 +23,5 @@
 import UIKit
 
 public func mainQueue(_ block: @escaping () -> ()) {
-    DispatchQueue.main.async(execute: block)
+  DispatchQueue.main.async(execute: block)
 }

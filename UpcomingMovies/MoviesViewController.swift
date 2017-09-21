@@ -28,80 +28,80 @@ let kCellReuseIdentifier = "Cell"
 // MARK: MoviesViewController: UIViewController
 
 class MoviesViewController: UIViewController {
-    
-    // MARK: Outlets
-    
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var imageView: UIImageView!
-    
-    // MARK: Properties
-    
-    fileprivate let tableViewDataSource = MoviesTableViewDataSource()
-    var tmdb: TMDb!
-    
-    var didSelect: (Movie) -> () = { _ in }
-    
-    // MARK: View Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
+  
+  // MARK: Outlets
+  
+  @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var imageView: UIImageView!
+  
+  // MARK: Properties
+  
+  private let tableViewDataSource = MoviesTableViewDataSource()
+  var tmdb: TMDb!
+  
+  var didSelect: (Movie) -> () = { _ in }
+  
+  // MARK: View Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setup()
+  }
+  
+  // MARK: Private
+  
+  private func setup() {
+    configureTableView()
+    loadData()
+  }
+  
+  private func configureTableView() {
+    tableView.dataSource = tableViewDataSource
+    tableView.delegate = self
+    tableView.remembersLastFocusedIndexPath = true
+  }
+  
+  private func loadData() {
+    tmdb.upcomingMovies { [weak self] (movies, error) in
+      guard error == nil else { return print(error!) }
+      self?.tableViewDataSource.movies = movies
+      self?.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
     }
-    
-    // MARK: Private
-    
-    fileprivate func setup() {
-        configureTableView()
-        loadData()
-    }
-    
-    fileprivate func configureTableView() {
-        tableView.dataSource = tableViewDataSource
-        tableView.delegate = self
-        tableView.remembersLastFocusedIndexPath = true
-    }
-    
-    fileprivate func loadData() {
-        tmdb.upcomingMovies { [weak self] (movies, error) in
-            guard error == nil else { return print(error!) }
-            self?.tableViewDataSource.movies = movies
-            self?.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-        }
-    }
-    
+  }
+  
 }
 
 // MARK: - MoviesViewController: UITableViewDelegate -
 
 extension MoviesViewController: UITableViewDelegate {
+  
+  // MARK: UITableViewDelegate
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let movie = tableViewDataSource.movieForIndexPath(indexPath)!
+    didSelect(movie)
+  }
+  
+  func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    didUpdateFocusInContext(context)
+  }
+  
+  // MARK: Helpers
+  
+  fileprivate func didUpdateFocusInContext(_ context: UITableViewFocusUpdateContext) {
+    guard let highlightedIndexPath = context.nextFocusedIndexPath else { return }
     
-    // MARK: UITableViewDelegate
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = tableViewDataSource.movieForIndexPath(indexPath)!
-        didSelect(movie)
+    let movie = tableViewDataSource.movieForIndexPath(highlightedIndexPath)!
+    guard movie.posterPath != nil else {
+      imageView.image = UIImage(named: "movie-placeholder")
+      return
     }
     
-    func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        didUpdateFocusInContext(context)
+    imageView.af_setImage(withURL: tmdb.posterImageURL(for: movie)!)
+    
+    if let row = tableView.indexPathForSelectedRow {
+      tableView.deselectRow(at: row, animated: false)
     }
-    
-    // MARK: Helpers
-    
-    fileprivate func didUpdateFocusInContext(_ context: UITableViewFocusUpdateContext) {
-        guard let highlightedIndexPath = context.nextFocusedIndexPath else { return }
-        
-        let movie = tableViewDataSource.movieForIndexPath(highlightedIndexPath)!
-        guard movie.posterPath != nil else {
-            imageView.image = UIImage(named: "movie-placeholder")
-            return
-        }
-        
-        imageView.af_setImage(withURL: tmdb.posterImageURLForMovie(movie)!)
-        
-        if let row = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: row, animated: false)
-        }
-    }
-    
+  }
+  
 }

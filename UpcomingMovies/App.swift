@@ -25,29 +25,29 @@ import UIKit
 // MARK: App
 
 class App {
-    
-    // MARK: Properties
-    
-    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let moviesViewController: MoviesViewController!
-    
-    fileprivate let tmdb = TMDb(webservice: Webservice())
-    
-    // MARK: Init
-    
-    init(window: UIWindow) {
-        moviesViewController = window.rootViewController as! MoviesViewController
-        moviesViewController.tmdb = tmdb
-        moviesViewController.didSelect = showMovie
-    }
-    
-    // MARK: Navigation Roots
-    
-    func showMovie(_ movie: Movie) {
-        let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
-        detailVC.movie = movie
-        detailVC.tmdb = tmdb
-        moviesViewController.present(detailVC, animated: true, completion: nil)
-    }
-    
+  
+  // MARK: Properties
+  
+  final let storyboard = UIStoryboard(name: "Main", bundle: nil)
+  final let moviesViewController: MoviesViewController!
+  
+  private final let tmdb = TMDb(webservice: Webservice())
+  
+  // MARK: Init
+  
+  init(window: UIWindow) {
+    moviesViewController = window.rootViewController as! MoviesViewController
+    moviesViewController.tmdb = tmdb
+    moviesViewController.didSelect = showMovie
+  }
+  
+  // MARK: Navigation Roots
+  
+  func showMovie(_ movie: Movie) {
+    let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
+    detailVC.movie = movie
+    detailVC.tmdb = tmdb
+    moviesViewController.present(detailVC, animated: true, completion: nil)
+  }
+  
 }

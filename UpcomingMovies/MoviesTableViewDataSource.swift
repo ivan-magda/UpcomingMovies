@@ -25,45 +25,45 @@ import UIKit
 // MARK: MoviesTableViewDataSource
 
 final class MoviesTableViewDataSource: NSObject {
-    
-    // MARK: Properties
-    
-    var movies: [Movie]? = nil
-    
-    // MARK: Public
-    
-    func movieForIndexPath(_ indexPath: IndexPath) -> Movie? {
-        return movies?[indexPath.row]
-    }
-    
+  
+  // MARK: Properties
+  
+  var movies: [Movie]? = nil
+  
+  // MARK: Public
+  
+  func movieForIndexPath(_ indexPath: IndexPath) -> Movie? {
+    return movies?[indexPath.row]
+  }
+  
 }
 
 // MARK: - MoviesTableViewDataSource: UITableViewDataSource -
 
 extension MoviesTableViewDataSource: UITableViewDataSource {
+  
+  // MARK: UITableViewDataSource
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return movies?.count ?? 0
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier)!
+    configureCell(cell, atIndexPath: indexPath)
     
-    // MARK: UITableViewDataSource
+    return cell
+  }
+  
+  // MARK: Helpers
+  
+  private func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
+    let movie = movies![indexPath.row]
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier)!
-        configureCell(cell, atIndexPath: indexPath)
-        
-        return cell
-    }
-    
-    // MARK: Helpers
-    
-    fileprivate func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
-        let movie = movies![indexPath.row]
-        
-        cell.textLabel?.text = movie.title
-        cell.detailTextLabel?.text = movie.releaseDate
-        cell.layer.cornerRadius = 6
-        cell.layer.masksToBounds = true
-    }
-
+    cell.textLabel?.text = movie.title
+    cell.detailTextLabel?.text = movie.releaseDate
+    cell.layer.cornerRadius = 6
+    cell.layer.masksToBounds = true
+  }
+  
 }

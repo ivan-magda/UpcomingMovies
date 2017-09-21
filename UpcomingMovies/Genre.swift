@@ -25,36 +25,36 @@ import Foundation
 // MARK: Genre
 
 struct Genre {
-    let id: Int
-    let name: String
+  let id: Int
+  let name: String
 }
 
 // MARK: - Genre (Parsing JSON) -
 
 extension Genre {
-    
-    init?(json: JSONDictionary) {
-        guard let id = json["id"] as? Int,
-            let name = json["name"] as? String else { return nil }
-        self.id = id
-        self.name = name
-    }
-    
+  
+  init?(json: JSONDictionary) {
+    guard let id = json["id"] as? Int,
+      let name = json["name"] as? String else { return nil }
+    self.id = id
+    self.name = name
+  }
+  
 }
 
 // MARK: - Genre (Resource) -
 
 extension Genre {
+  
+  static func all() -> Resource<[Genre]> {
+    let URL = TMDb.url(from: [:], withPathExtension: "/genre/movie/list")
     
-    static func all() -> Resource<[Genre]> {
-        let URL = TMDb.urlFromParameters([:], withPathExtension: "/genre/movie/list")
-        
-        let resource = Resource<[Genre]>(url: URL) { json in
-            let genres = (json as? JSONDictionary)?["genres"] as? [JSONDictionary]
-            return genres?.flatMap(Genre.init)
-        }
-        
-        return resource
+    let resource = Resource<[Genre]>(url: URL) { json in
+      let genres = (json as? JSONDictionary)?["genres"] as? [JSONDictionary]
+      return genres?.flatMap(Genre.init)
     }
     
+    return resource
+  }
+  
 }

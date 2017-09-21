@@ -25,68 +25,68 @@ import UIKit
 // MARK: DetailViewController: UIViewController
 
 class DetailViewController: UIViewController {
-    
-    // MARK: Outlets
-    
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var overview: UILabel!
-    @IBOutlet weak var rating: UILabel!
-    @IBOutlet weak var releaseDate: UILabel!
-    @IBOutlet weak var genresLabel: UILabel!
-    @IBOutlet weak var imageView: UIImageView!
-    
-    // MARK: Properties
-    
-    var movie: Movie!
-    var tmdb: TMDb!
-    
-    fileprivate var genres: [Genre]? {
-        didSet {
-            updateGenresLabel()
-        }
+  
+  // MARK: Outlets
+  
+  @IBOutlet weak var name: UILabel!
+  @IBOutlet weak var overview: UILabel!
+  @IBOutlet weak var rating: UILabel!
+  @IBOutlet weak var releaseDate: UILabel!
+  @IBOutlet weak var genresLabel: UILabel!
+  @IBOutlet weak var imageView: UIImageView!
+  
+  // MARK: Properties
+  
+  var movie: Movie!
+  var tmdb: TMDb!
+  
+  private var genres: [Genre]? {
+    didSet {
+      updateGenresLabel()
     }
-
-    // MARK: View Life Cycle
+  }
+  
+  // MARK: View Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setup()
+  }
+  
+  // MARK: Private
+  
+  private func setup() {
+    configureUI()
+    loadGenres()
+  }
+  
+  private func configureUI() {
+    name.text = movie.title
+    overview.text = "Overview: \(movie.overview)"
+    rating.text = "Rating: \(movie.vote)"
+    releaseDate.text = "Release date: \(movie.releaseDate)"
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setup()
+    if let _ = movie.posterPath {
+      imageView.af_setImage(withURL: tmdb.posterImageURL(for: movie)!)
+    } else {
+      imageView.image = UIImage(named: "movie-placeholder")
     }
-    
-    // MARK: Private
-    
-    fileprivate func setup() {
-        configureUI()
-        loadGenres()
+  }
+  
+  private func loadGenres() {
+    tmdb.allGenres { [weak self] (genres, error) in
+      guard error == nil else { return print(error!) }
+      self?.genres = genres
     }
+  }
+  
+  private func updateGenresLabel() {
+    guard let genres = genres else { return }
+    let ids = movie!.genreIds
+    let movieGenres = genres.filter { ids.contains($0.id) }.map { $0.name }
+    let genresString = movieGenres.joined(separator: ", ")
     
-    fileprivate func configureUI() {
-        name.text = movie.title
-        overview.text = "Overview: \(movie.overview)"
-        rating.text = "Rating: \(movie.vote)"
-        releaseDate.text = "Release date: \(movie.releaseDate)"
-        
-        if let _ = movie.posterPath {
-            imageView.af_setImage(withURL: tmdb.posterImageURLForMovie(movie)!)
-        } else {
-            imageView.image = UIImage(named: "movie-placeholder")
-        }
-    }
-    
-    fileprivate func loadGenres() {
-        tmdb.allGenres { [weak self] (genres, error) in
-            guard error == nil else { return print(error!) }
-            self?.genres = genres
-        }
-    }
-    
-    fileprivate func updateGenresLabel() {
-        guard let genres = genres else { return }
-        let ids = movie!.genreIds
-        let movieGenres = genres.filter { ids.contains($0.id) }.map { $0.name }
-        let genresString = movieGenres.joined(separator: ", ")
-        
-        genresLabel.text = "Genres: \(genresString)"
-    }
-
+    genresLabel.text = "Genres: \(genresString)"
+  }
+  
 }

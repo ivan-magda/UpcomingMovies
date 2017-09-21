@@ -26,20 +26,20 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
-    // MARK: Properties
-
-    var window: UIWindow?
-    var app: App?
-    
-    // MARK: UIApplicationDelegate
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        if let window = window {
-            app = App(window: window)
-        }
-        
-        return true
+  
+  // MARK: Properties
+  
+  var window: UIWindow?
+  var app: App?
+  
+  // MARK: UIApplicationDelegate
+  
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    if let window = window {
+      app = App(window: window)
     }
-
+    
+    return true
+  }
+  
 }
