@@ -32,7 +32,7 @@ final class MoviesTableViewDataSource: NSObject {
     
     // MARK: Public
     
-    func movieForIndexPath(indexPath: NSIndexPath) -> Movie? {
+    func movieForIndexPath(_ indexPath: IndexPath) -> Movie? {
         return movies?[indexPath.row]
     }
     
@@ -44,12 +44,12 @@ extension MoviesTableViewDataSource: UITableViewDataSource {
     
     // MARK: UITableViewDataSource
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies?.count ?? 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(kCellReuseIdentifier)!
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: kCellReuseIdentifier)!
         configureCell(cell, atIndexPath: indexPath)
         
         return cell
@@ -57,7 +57,7 @@ extension MoviesTableViewDataSource: UITableViewDataSource {
     
     // MARK: Helpers
     
-    private func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
+    fileprivate func configureCell(_ cell: UITableViewCell, atIndexPath indexPath: IndexPath) {
         let movie = movies![indexPath.row]
         
         cell.textLabel?.text = movie.title

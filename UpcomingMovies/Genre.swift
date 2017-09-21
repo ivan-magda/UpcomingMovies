@@ -35,7 +35,7 @@ extension Genre {
     
     init?(json: JSONDictionary) {
         guard let id = json["id"] as? Int,
-            name = json["name"] as? String else { return nil }
+            let name = json["name"] as? String else { return nil }
         self.id = id
         self.name = name
     }

@@ -36,7 +36,7 @@ class MoviesViewController: UIViewController {
     
     // MARK: Properties
     
-    private let tableViewDataSource = MoviesTableViewDataSource()
+    fileprivate let tableViewDataSource = MoviesTableViewDataSource()
     var tmdb: TMDb!
     
     var didSelect: (Movie) -> () = { _ in }
@@ -50,22 +50,22 @@ class MoviesViewController: UIViewController {
     
     // MARK: Private
     
-    private func setup() {
+    fileprivate func setup() {
         configureTableView()
         loadData()
     }
     
-    private func configureTableView() {
+    fileprivate func configureTableView() {
         tableView.dataSource = tableViewDataSource
         tableView.delegate = self
         tableView.remembersLastFocusedIndexPath = true
     }
     
-    private func loadData() {
+    fileprivate func loadData() {
         tmdb.upcomingMovies { [weak self] (movies, error) in
-            guard error == nil else { return print(error) }
+            guard error == nil else { return print(error!) }
             self?.tableViewDataSource.movies = movies
-            self?.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+            self?.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         }
     }
     
@@ -77,18 +77,18 @@ extension MoviesViewController: UITableViewDelegate {
     
     // MARK: UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = tableViewDataSource.movieForIndexPath(indexPath)!
         didSelect(movie)
     }
     
-    func tableView(tableView: UITableView, didUpdateFocusInContext context: UITableViewFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+    func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         didUpdateFocusInContext(context)
     }
     
     // MARK: Helpers
     
-    private func didUpdateFocusInContext(context: UITableViewFocusUpdateContext) {
+    fileprivate func didUpdateFocusInContext(_ context: UITableViewFocusUpdateContext) {
         guard let highlightedIndexPath = context.nextFocusedIndexPath else { return }
         
         let movie = tableViewDataSource.movieForIndexPath(highlightedIndexPath)!
@@ -97,10 +97,10 @@ extension MoviesViewController: UITableViewDelegate {
             return
         }
         
-        imageView.af_setImageWithURL(tmdb.posterImageURLForMovie(movie)!)
+        imageView.af_setImage(withURL: tmdb.posterImageURLForMovie(movie)!)
         
         if let row = tableView.indexPathForSelectedRow {
-            tableView.deselectRowAtIndexPath(row, animated: false)
+            tableView.deselectRow(at: row, animated: false)
         }
     }
     

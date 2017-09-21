@@ -24,12 +24,12 @@ import Foundation
 
 enum Result<A> {
     case success(A)
-    case error(ErrorType)
+    case error(Error)
 }
 
 extension Result {
     
-    init(_ value: A?, or error: ErrorType) {
+    init(_ value: A?, or error: Error) {
         if let value = value {
             self = .success(value)
         } else {
@@ -42,7 +42,7 @@ extension Result {
         return v
     }
     
-    var error: ErrorType? {
+    var error: Error? {
         guard case .error(let e) = self else { return nil }
         return e
     }

@@ -52,11 +52,11 @@ extension Movie {
     
     init?(json: JSONDictionary) {
         guard let id = json[Key.id.rawValue] as? Int,
-            title = json[Key.title.rawValue] as? String,
-            overview = json[Key.overview.rawValue] as? String,
-            releaseDate = json[Key.releaseDate.rawValue] as? String,
-            genreIds = json[Key.genreIds.rawValue] as? [Int],
-            vote = json[Key.vote.rawValue] as? Double else {
+            let title = json[Key.title.rawValue] as? String,
+            let overview = json[Key.overview.rawValue] as? String,
+            let releaseDate = json[Key.releaseDate.rawValue] as? String,
+            let genreIds = json[Key.genreIds.rawValue] as? [Int],
+            let vote = json[Key.vote.rawValue] as? Double else {
                 return nil
         }
         
@@ -79,8 +79,11 @@ extension Movie {
         let URL = TMDb.urlFromParameters([:], withPathExtension: "/movie/upcoming")
         
         let resource = Resource<[Movie]>(url: URL) { json in
-            let movies = json["results"] as? [JSONDictionary]
-            return movies?.flatMap(Movie.init)
+            guard let json = json as? JSONDictionary,
+                let movies = json["results"] as? [JSONDictionary] else {
+                    return []
+            }
+            return movies.flatMap(Movie.init)
         }
         
         return resource

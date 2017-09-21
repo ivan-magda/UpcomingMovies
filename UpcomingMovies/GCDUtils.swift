@@ -22,6 +22,6 @@
 
 import UIKit
 
-public func mainQueue(block: () -> ()) {
-    dispatch_async(dispatch_get_main_queue(), block)
+public func mainQueue(_ block: @escaping () -> ()) {
+    DispatchQueue.main.async(execute: block)
 }

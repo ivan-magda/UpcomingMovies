@@ -23,15 +23,15 @@
 import Foundation
 
 struct Resource<A> {
-    var url: NSURL
-    var parse: NSData -> A?
+    var url: URL
+    var parse: (Data) -> A?
 }
 
 extension Resource {
-    init(url: NSURL, parseJSON: AnyObject -> A?) {
+    init(url: URL, parseJSON: @escaping (Any) -> A?) {
         self.url = url
         self.parse = { data in
-            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions())
+            let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
             return json.flatMap(parseJSON)
         }
     }

@@ -24,8 +24,8 @@ import Foundation
 
 typealias MethodParameters = [String: AnyObject]
 
-typealias MoviesCompletionHandler = ([Movie]?, ErrorType?) -> Void
-typealias GenresCompletionHandler = ([Genre]?, ErrorType?) -> Void
+typealias MoviesCompletionHandler = ([Movie]?, Error?) -> Void
+typealias GenresCompletionHandler = ([Genre]?, Error?) -> Void
 
 // MARK: TMDb
 
@@ -60,25 +60,25 @@ class TMDb {
 
 extension TMDb {
     
-    class func urlFromParameters(parameters: MethodParameters, withPathExtension: String? = nil) -> NSURL {
-        let components = NSURLComponents()
+    class func urlFromParameters(_ parameters: MethodParameters, withPathExtension: String? = nil) -> URL {
+        var components = URLComponents()
         components.scheme = Constants.TMDB.ApiScheme
         components.host = Constants.TMDB.ApiHost
         components.path = Constants.TMDB.ApiPath + (withPathExtension ?? "")
-        components.queryItems = [NSURLQueryItem]()
+        components.queryItems = [URLQueryItem]()
         
-        let apiKey = NSURLQueryItem(
+        let apiKey = URLQueryItem(
             name: Constants.TMDBParameterKeys.ApiKey,
             value: Constants.TMDBParameterValues.ApiKey
         )
         components.queryItems!.append(apiKey)
         
         parameters.forEach { key, value in
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
         
-        return components.URL!
+        return components.url!
     }
     
 }
@@ -87,14 +87,14 @@ extension TMDb {
 
 extension TMDb {
     
-    func upcomingMovies(completion: MoviesCompletionHandler) {
+    func upcomingMovies(_ completion: @escaping MoviesCompletionHandler) {
         webservice.load(Movie.upcoming()) { result in
             guard let movies = result.value else { return completion(nil, result.error) }
             completion(movies, nil)
         }
     }
     
-    func allGenres(completion: GenresCompletionHandler) {
+    func allGenres(_ completion: @escaping GenresCompletionHandler) {
         webservice.load(Genre.all()) { result in
             guard let genres = result.value else { return completion(nil, result.error) }
             completion(genres, nil)
@@ -107,13 +107,13 @@ extension TMDb {
 
 extension TMDb {
     
-    func posterImageURLForMovie(movie: Movie, size: String) -> NSURL? {
+    func posterImageURLForMovie(_ movie: Movie, size: String) -> URL? {
         guard let posterPath = movie.posterPath else { return nil }
-        let baseURL = NSURL(string: config.secureBaseImageURLString)!
-        return baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(posterPath)
+        let baseURL = URL(string: config.secureBaseImageURLString)!
+        return baseURL.appendingPathComponent(size).appendingPathComponent(posterPath)
     }
     
-    func posterImageURLForMovie(movie: Movie) -> NSURL? {
+    func posterImageURLForMovie(_ movie: Movie) -> URL? {
         return posterImageURLForMovie(movie, size: "w500")
     }
     

@@ -31,7 +31,7 @@ class App {
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     let moviesViewController: MoviesViewController!
     
-    private let tmdb = TMDb(webservice: Webservice())
+    fileprivate let tmdb = TMDb(webservice: Webservice())
     
     // MARK: Init
     
@@ -43,11 +43,11 @@ class App {
     
     // MARK: Navigation Roots
     
-    func showMovie(movie: Movie) {
-        let detailVC = storyboard.instantiateViewControllerWithIdentifier("Detail") as! DetailViewController
+    func showMovie(_ movie: Movie) {
+        let detailVC = storyboard.instantiateViewController(withIdentifier: "Detail") as! DetailViewController
         detailVC.movie = movie
         detailVC.tmdb = tmdb
-        moviesViewController.presentViewController(detailVC, animated: true, completion: nil)
+        moviesViewController.present(detailVC, animated: true, completion: nil)
     }
     
 }

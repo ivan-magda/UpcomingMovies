@@ -40,7 +40,7 @@ class DetailViewController: UIViewController {
     var movie: Movie!
     var tmdb: TMDb!
     
-    private var genres: [Genre]? {
+    fileprivate var genres: [Genre]? {
         didSet {
             updateGenresLabel()
         }
@@ -55,36 +55,36 @@ class DetailViewController: UIViewController {
     
     // MARK: Private
     
-    private func setup() {
+    fileprivate func setup() {
         configureUI()
         loadGenres()
     }
     
-    private func configureUI() {
+    fileprivate func configureUI() {
         name.text = movie.title
         overview.text = "Overview: \(movie.overview)"
         rating.text = "Rating: \(movie.vote)"
         releaseDate.text = "Release date: \(movie.releaseDate)"
         
         if let _ = movie.posterPath {
-            imageView.af_setImageWithURL(tmdb.posterImageURLForMovie(movie)!)
+            imageView.af_setImage(withURL: tmdb.posterImageURLForMovie(movie)!)
         } else {
             imageView.image = UIImage(named: "movie-placeholder")
         }
     }
     
-    private func loadGenres() {
+    fileprivate func loadGenres() {
         tmdb.allGenres { [weak self] (genres, error) in
             guard error == nil else { return print(error!) }
             self?.genres = genres
         }
     }
     
-    private func updateGenresLabel() {
+    fileprivate func updateGenresLabel() {
         guard let genres = genres else { return }
         let ids = movie!.genreIds
         let movieGenres = genres.filter { ids.contains($0.id) }.map { $0.name }
-        let genresString = movieGenres.joinWithSeparator(", ")
+        let genresString = movieGenres.joined(separator: ", ")
         
         genresLabel.text = "Genres: \(genresString)"
     }

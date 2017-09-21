@@ -25,8 +25,8 @@ import Foundation
 
 // MARK: File Support
 
-private let _documentsDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
-private let _fileURL = _documentsDirectoryURL.URLByAppendingPathComponent("TheMovieDB-Configuration")
+private let _documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
+private let _fileURL = _documentsDirectoryURL.appendingPathComponent("TheMovieDB-Configuration")
 
 // MARK: - TMDbConfig -
 
@@ -41,12 +41,12 @@ class TMDbConfig: NSObject, NSCoding {
     var baseImageURLString = "http://image.tmdb.org/t/p/"
     var secureBaseImageURLString =  "https://image.tmdb.org/t/p/"
     var posterSizes = ["w92", "w154", "w185", "w342", "w500", "w780", "original"]
-    var dateUpdated: NSDate? = nil
+    var dateUpdated: Date? = nil
     
     /// Returns the number days since the config was last updated.
     var daysSinceLastUpdate: Int? {
         if let lastUpdate = dateUpdated {
-            return Int(NSDate().timeIntervalSinceDate(lastUpdate)) / 60*60*24
+            return Int(Date().timeIntervalSince(lastUpdate)) / 60*60*24
         } else {
             return nil
         }
@@ -69,13 +69,13 @@ class TMDbConfig: NSObject, NSCoding {
         self.baseImageURLString = urlString
         self.secureBaseImageURLString = secureURLString
         self.posterSizes = posterSizesArray
-        self.dateUpdated = NSDate()
+        self.dateUpdated = Date()
     }
     
     // MARK: Update
     
-    func requestForNewConfigIfDaysSinceUpdateExceeds(days: Int, newConfig completion: Result<TMDbConfig> -> ()) {
-        guard let daysSinceLastUpdate = daysSinceLastUpdate where daysSinceLastUpdate <= days else {
+    func requestForNewConfigIfDaysSinceUpdateExceeds(_ days: Int, newConfig completion: @escaping (Result<TMDbConfig>) -> ()) {
+        guard let daysSinceLastUpdate = daysSinceLastUpdate, daysSinceLastUpdate <= days else {
             return Webservice().load(TMDbConfig.resource(), completion: completion)
         }
     }
@@ -89,26 +89,26 @@ class TMDbConfig: NSObject, NSCoding {
     let DateUpdatedKey = "config.date_update_key"
     
     required init(coder aDecoder: NSCoder) {
-        baseImageURLString = aDecoder.decodeObjectForKey(BaseImageURLStringKey) as! String
-        secureBaseImageURLString = aDecoder.decodeObjectForKey(SecureBaseImageURLStringKey) as! String
-        posterSizes = aDecoder.decodeObjectForKey(PosterSizesKey) as! [String]
-        dateUpdated = aDecoder.decodeObjectForKey(DateUpdatedKey) as? NSDate
+        baseImageURLString = aDecoder.decodeObject(forKey: BaseImageURLStringKey) as! String
+        secureBaseImageURLString = aDecoder.decodeObject(forKey: SecureBaseImageURLStringKey) as! String
+        posterSizes = aDecoder.decodeObject(forKey: PosterSizesKey) as! [String]
+        dateUpdated = aDecoder.decodeObject(forKey: DateUpdatedKey) as? Date
     }
     
-    func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(baseImageURLString, forKey: BaseImageURLStringKey)
-        aCoder.encodeObject(secureBaseImageURLString, forKey: SecureBaseImageURLStringKey)
-        aCoder.encodeObject(posterSizes, forKey: PosterSizesKey)
-        aCoder.encodeObject(dateUpdated, forKey: DateUpdatedKey)
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(baseImageURLString, forKey: BaseImageURLStringKey)
+        aCoder.encode(secureBaseImageURLString, forKey: SecureBaseImageURLStringKey)
+        aCoder.encode(posterSizes, forKey: PosterSizesKey)
+        aCoder.encode(dateUpdated, forKey: DateUpdatedKey)
     }
     
     func save() {
-        NSKeyedArchiver.archiveRootObject(self, toFile: _fileURL.path!)
+        NSKeyedArchiver.archiveRootObject(self, toFile: _fileURL.path)
     }
     
     class func unarchivedInstance() -> TMDbConfig? {
-        if NSFileManager.defaultManager().fileExistsAtPath(_fileURL.path!) {
-            return NSKeyedUnarchiver.unarchiveObjectWithFile(_fileURL.path!) as? TMDbConfig
+        if FileManager.default.fileExists(atPath: _fileURL.path) {
+            return NSKeyedUnarchiver.unarchiveObject(withFile: _fileURL.path) as? TMDbConfig
         } else {
             return nil
         }
