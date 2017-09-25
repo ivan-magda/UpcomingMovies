@@ -82,24 +82,25 @@ class TMDbConfig: NSObject, NSCoding {
   
   // MARK: NSCoding
   
-  let BaseImageURLStringKey = "config.base_image_url_string_key"
-  let SecureBaseImageURLStringKey =  "config.secure_base_image_url_key"
-  let PosterSizesKey = "config.poster_size_key"
-  let ProfileSizesKey = "config.profile_size_key"
-  let DateUpdatedKey = "config.date_update_key"
+  private enum CodingKeys: String {
+    case baseImageUrl
+    case secureBaseImageUrl
+    case posterSizes
+    case dateUpdated
+  }
   
   required init(coder aDecoder: NSCoder) {
-    baseImageURLString = aDecoder.decodeObject(forKey: BaseImageURLStringKey) as! String
-    secureBaseImageURLString = aDecoder.decodeObject(forKey: SecureBaseImageURLStringKey) as! String
-    posterSizes = aDecoder.decodeObject(forKey: PosterSizesKey) as! [String]
-    dateUpdated = aDecoder.decodeObject(forKey: DateUpdatedKey) as? Date
+    baseImageURLString = aDecoder.decodeObject(forKey: CodingKeys.baseImageUrl.rawValue) as! String
+    secureBaseImageURLString = aDecoder.decodeObject(forKey: CodingKeys.secureBaseImageUrl.rawValue) as! String
+    posterSizes = aDecoder.decodeObject(forKey: CodingKeys.posterSizes.rawValue) as! [String]
+    dateUpdated = aDecoder.decodeObject(forKey: CodingKeys.dateUpdated.rawValue) as? Date
   }
   
   func encode(with aCoder: NSCoder) {
-    aCoder.encode(baseImageURLString, forKey: BaseImageURLStringKey)
-    aCoder.encode(secureBaseImageURLString, forKey: SecureBaseImageURLStringKey)
-    aCoder.encode(posterSizes, forKey: PosterSizesKey)
-    aCoder.encode(dateUpdated, forKey: DateUpdatedKey)
+    aCoder.encode(baseImageURLString, forKey: CodingKeys.baseImageUrl.rawValue)
+    aCoder.encode(secureBaseImageURLString, forKey: CodingKeys.secureBaseImageUrl.rawValue)
+    aCoder.encode(posterSizes, forKey: CodingKeys.posterSizes.rawValue)
+    aCoder.encode(dateUpdated, forKey: CodingKeys.dateUpdated.rawValue)
   }
   
   func save() {
