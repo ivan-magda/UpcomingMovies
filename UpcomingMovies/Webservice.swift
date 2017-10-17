@@ -34,7 +34,7 @@ final class Webservice {
   /// Loads a resource. The completion handler is always called on the main queue.
   func load<A>(_ resource: Resource<A>, completion: @escaping (Result<A>) -> ()) {
     URLSession.shared.dataTask(with: resource.url, completionHandler: { data, response, _ in
-      let parsed = data.flatMap(resource.parse)
+      let parsed = resource.parse(data!)
       let result = Result(parsed, or: WebserviceError.other)
       mainQueue { completion(result) }
     }) .resume()
