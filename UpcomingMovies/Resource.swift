@@ -22,17 +22,17 @@
 
 import Foundation
 
-struct Resource<A> {
+struct Resource<A:Codable> {
   var url: URL
   var parse: (Data) -> A?
 }
 
 extension Resource {
-  init(url: URL, parseJSON: @escaping (Any) -> A?) {
+  init(url: URL) {
     self.url = url
     self.parse = { data in
-      let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-      return json.flatMap(parseJSON)
+        let decoder = JSONDecoder()
+        return try! decoder.decode(A.self, from: data)
     }
   }
 }

@@ -90,14 +90,14 @@ extension TMDb {
   func upcomingMovies(_ completion: @escaping MoviesCompletionHandler) {
     webservice.load(Movie.upcoming()) { result in
       guard let movies = result.value else { return completion(nil, result.error) }
-      completion(movies, nil)
+      completion(movies.results, nil)
     }
   }
   
   func allGenres(_ completion: @escaping GenresCompletionHandler) {
     webservice.load(Genre.all()) { result in
       guard let genres = result.value else { return completion(nil, result.error) }
-      completion(genres, nil)
+      completion(genres.first?.value, nil)
     }
   }
   
@@ -109,7 +109,7 @@ extension TMDb {
   
   func posterImageURL(for movie: Movie, size: String) -> URL? {
     guard let posterPath = movie.posterPath else { return nil }
-    let baseURL = URL(string: config.secureBaseImageURLString)!
+    let baseURL = URL(string: config.secureBaseImageUrl)!
     return baseURL.appendingPathComponent(size).appendingPathComponent(posterPath)
   }
   

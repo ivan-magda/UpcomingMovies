@@ -26,12 +26,17 @@ extension TMDbConfig {
   
   class func resource() -> Resource<TMDbConfig> {
     let URL = TMDb.url(from: [:], withPathExtension: "/configuration")
-    let resource = Resource<TMDbConfig>(url: URL) { json in
-      let dictionary = json as? JSONDictionary
-      return dictionary.flatMap(TMDbConfig.init)
+    var resource = Resource<TMDbConfig>(url: URL)
+    resource.parse = { data in
+        let decoder = JSONDecoder()
+        let result = try? decoder.decode(TMDbConfigConstruction.self, from: data)
+        return result?.images
     }
-    
     return resource
   }
   
+}
+
+struct TMDbConfigConstruction: Codable {
+    var images: TMDbConfig
 }

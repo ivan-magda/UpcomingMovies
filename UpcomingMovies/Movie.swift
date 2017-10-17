@@ -22,21 +22,11 @@
 
 import UIKit
 
-// MARK: Types
 
-private enum Key: String {
-  case id
-  case title
-  case overview
-  case releaseDate = "release_date"
-  case genreIds = "genre_ids"
-  case posterPath = "poster_path"
-  case vote = "vote_average"
-}
 
 // MARK: - Movie
 
-struct Movie {
+struct Movie: Codable {
   let id: Int
   let title: String
   let overview: String
@@ -44,45 +34,34 @@ struct Movie {
   let genreIds: [Int]
   let vote: Double
   let posterPath: String?
-}
-
-// MARK: - Movie (JSON Parsing) -
-
-extension Movie {
-  
-  init?(json: JSONDictionary) {
-    guard let id = json[Key.id.rawValue] as? Int,
-      let title = json[Key.title.rawValue] as? String,
-      let overview = json[Key.overview.rawValue] as? String,
-      let releaseDate = json[Key.releaseDate.rawValue] as? String,
-      let genreIds = json[Key.genreIds.rawValue] as? [Int],
-      let vote = json[Key.vote.rawValue] as? Double else {
-        return nil
-    }
     
-    self.id = id
-    self.title = title
-    self.overview = overview
-    self.releaseDate = releaseDate
-    self.genreIds = genreIds
-    self.vote = vote
-    self.posterPath = json[Key.posterPath.rawValue] as? String
-  }
-  
+    // MARK: Coding Keys
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case overview
+        case releaseDate = "release_date"
+        case genreIds = "genre_ids"
+        case posterPath = "poster_path"
+        case vote = "vote_average"
+    }
 }
 
 // MARK: - Movie (Resource) -
 
 extension Movie {
   
-  static func upcoming() -> Resource<[Movie]> {
+  static func upcoming() -> Resource<MoviesResponse> {
     let URL = TMDb.url(from: [:], withPathExtension: "/movie/upcoming")
-    
-    let resource = Resource<[Movie]>(url: URL) { json in
-      let movies = (json as? JSONDictionary)?["results"] as? [JSONDictionary]
-      return movies?.flatMap(Movie.init)
-    }
-    
-    return resource
+    return Resource<MoviesResponse>(url: URL)
   }
+}
+
+struct MoviesResponse: Codable {
+    var results: [Movie]
+    
+    private enum CodingKeys: String, CodingKey {
+        case results
+    }
 }

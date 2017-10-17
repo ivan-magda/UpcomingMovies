@@ -23,23 +23,18 @@
 import UIKit
 import Foundation
 
-// MARK: File Support
-
-private let _documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first! as URL
-private let _fileURL = _documentsDirectoryURL.appendingPathComponent("TheMovieDB-Configuration")
-
 // MARK: - TMDbConfig -
 
 ///  The TMDbConfig stores (persist) information that is used to build image
 ///  URL's for TheMovieDB. Invoking the updateConfig convenience method
 ///  will download the latest using the initializer below to parse the dictionary.
-class TMDbConfig: NSObject, NSCoding {
+class TMDbConfig: Codable {
   
   // MARK: Properties
   
   // default values from 13/07/16
-  var baseImageURLString = "http://image.tmdb.org/t/p/"
-  var secureBaseImageURLString =  "https://image.tmdb.org/t/p/"
+  var baseImageUrl = "http://image.tmdb.org/t/p/"
+  var secureBaseImageUrl =  "https://image.tmdb.org/t/p/"
   var posterSizes = ["w92", "w154", "w185", "w342", "w500", "w780", "original"]
   var dateUpdated: Date? = nil
   
@@ -53,9 +48,6 @@ class TMDbConfig: NSObject, NSCoding {
   }
   
   // MARK: Initialization
-  
-  override init() {}
-  
   convenience init?(dictionary: [String: AnyObject]) {
     self.init()
     
@@ -66,8 +58,8 @@ class TMDbConfig: NSObject, NSCoding {
         return nil
     }
     
-    self.baseImageURLString = urlString
-    self.secureBaseImageURLString = secureURLString
+    self.baseImageUrl = urlString
+    self.secureBaseImageUrl = secureURLString
     self.posterSizes = posterSizesArray
     self.dateUpdated = Date()
   }
@@ -80,39 +72,25 @@ class TMDbConfig: NSObject, NSCoding {
     }
   }
   
-  // MARK: NSCoding
+  // MARK: Codable
   
-  private enum CodingKeys: String {
-    case baseImageUrl
-    case secureBaseImageUrl
-    case posterSizes
+  private enum CodingKeys: String, CodingKey {
+    case baseImageUrl = "base_url"
+    case secureBaseImageUrl = "secure_base_url"
+    case posterSizes = "poster_sizes"
     case dateUpdated
   }
   
-  required init(coder aDecoder: NSCoder) {
-    baseImageURLString = aDecoder.decodeObject(forKey: CodingKeys.baseImageUrl.rawValue) as! String
-    secureBaseImageURLString = aDecoder.decodeObject(forKey: CodingKeys.secureBaseImageUrl.rawValue) as! String
-    posterSizes = aDecoder.decodeObject(forKey: CodingKeys.posterSizes.rawValue) as! [String]
-    dateUpdated = aDecoder.decodeObject(forKey: CodingKeys.dateUpdated.rawValue) as? Date
-  }
-  
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(baseImageURLString, forKey: CodingKeys.baseImageUrl.rawValue)
-    aCoder.encode(secureBaseImageURLString, forKey: CodingKeys.secureBaseImageUrl.rawValue)
-    aCoder.encode(posterSizes, forKey: CodingKeys.posterSizes.rawValue)
-    aCoder.encode(dateUpdated, forKey: CodingKeys.dateUpdated.rawValue)
-  }
-  
   func save() {
-    NSKeyedArchiver.archiveRootObject(self, toFile: _fileURL.path)
+    let encoder = JSONEncoder()
+    if let json = try? encoder.encode(self) {
+        UserDefaults.standard.set(json, forKey: "TheMovieDB-Configuration")
+    }
   }
   
   class func unarchivedInstance() -> TMDbConfig? {
-    if FileManager.default.fileExists(atPath: _fileURL.path) {
-      return NSKeyedUnarchiver.unarchiveObject(withFile: _fileURL.path) as? TMDbConfig
-    } else {
-      return nil
-    }
+    let decoder = JSONDecoder()
+    return try? decoder.decode(self, from: UserDefaults.standard.data(forKey: "TheMovieDB-Configuration") ?? "".data(using: .utf8)!)
   }
   
 }
